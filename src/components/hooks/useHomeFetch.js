@@ -21,7 +21,7 @@ export const useHomeFetch = () => {
       }))
     } catch(error) {
         setError(true);
-        console(error);
+        
     } 
     setLoading(false)
   }
