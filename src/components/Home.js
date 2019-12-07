@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import {
-  API_URL,
-  API_KEY,
-  API_BASE_URL,
   POSTER_SIZE,
   BACKDROP_SIZE,
   IMAGE_BASE_URL,
+  SEARCH_BASE_URL,
+  POPULAR_BASE_URL
 } from '../config';
 
 
@@ -34,14 +33,23 @@ const Home = () => {
       movies
     }
   }, fetchMovies] = useHomeFetch();
-  const [searchTerm, setSearchForm] = useState('');
+
+  const [searchTerm, setSearchTerm] = useState('');
 
   if (error) return <div>Something went wrong ...</div>;
   if (!movies[0]) return <Spinner />;
 
+  const searchMovies = (search) => {
+    const endpoint = search ? SEARCH_BASE_URL + search : POPULAR_BASE_URL;
+
+    setSearchTerm(search);
+    fetchMovies(endpoint);
+
+  }
+
   const loadMoreMovies = () => {
-    const serachEndPoint = `${API_URL}search/movie?api_key=${API_KEY}&query=${searchTerm}&page=${currentPage + 1}`;
-    const popularEndPoint = `${API_URL}movie/popular?api_key=${API_KEY}&page=${currentPage+1}`;
+    const serachEndPoint = `${SEARCH_BASE_URL}${searchTerm}&page=${currentPage + 1}`;
+    const popularEndPoint = `${POPULAR_BASE_URL}&page=${currentPage+1}`;
   
     const endpoint = searchTerm ? serachEndPoint : popularEndPoint
 
@@ -50,21 +58,29 @@ const Home = () => {
 
   return (
     <React.Fragment>
-      <HeroImage
+      {!searchTerm && (
+        <HeroImage
         image={`${IMAGE_BASE_URL}${BACKDROP_SIZE}${heroImage.backdrop_path}`}
         title={heroImage.original_title}
         text={heroImage.overview}
       />
-      <SearchBar />
+      )}
+      
+      <SearchBar callback={searchMovies}/>
       <Grid 
         header={searchTerm ? 'Search Result': 'Popular Movies'}>
         {movies.map((movie) => (
           <MovieThumb 
             key={movie.id} 
             clickable 
-            image={movie.poster_path ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}` : NoImage}  
+            image={
+              movie.poster_path 
+              ? IMAGE_BASE_URL +POSTER_SIZE + movie.poster_path 
+              : NoImage
+            }  
+            movieId={movie.id}
+            movieName={movie.original_title}
           />
-          
         ))}
       </Grid>
       {loading && <Spinner />}
