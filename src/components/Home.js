@@ -39,6 +39,15 @@ const Home = () => {
   if (error) return <div>Something went wrong ...</div>;
   if (!movies[0]) return <Spinner />;
 
+  const loadMoreMovies = () => {
+    const serachEndPoint = `${API_URL}search/movie?api_key=${API_KEY}&query=${searchTerm}&page=${currentPage + 1}`;
+    const popularEndPoint = `${API_URL}movie/popular?api_key=${API_KEY}&page=${currentPage+1}`;
+  
+    const endpoint = searchTerm ? serachEndPoint : popularEndPoint
+
+    fetchMovies(endpoint);
+  };
+
   return (
     <React.Fragment>
       <HeroImage
@@ -58,8 +67,11 @@ const Home = () => {
           
         ))}
       </Grid>
-      <Spinner />
-      <LoadMoreBtn />
+      {loading && <Spinner />}
+      {currentPage < totalPages && !loading && (
+        <LoadMoreBtn text="Load More" callback={loadMoreMovies} />
+      )}
+      
     </React.Fragment>
   );
 };

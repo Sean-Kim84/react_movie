@@ -1,10 +1,11 @@
 import React from 'react';
+import { StyledLeadMoreBtn } from '../styles/StyledLeadMoreBtn';
 
-const LoadMoreBtn = () => {
+const LoadMoreBtn = ({text, callback}) => {
   return (
-    <div>
-      
-    </div>
+    <StyledLeadMoreBtn type="text" onClick={callback}>
+      {text}
+    </StyledLeadMoreBtn>
   );
 };
 
