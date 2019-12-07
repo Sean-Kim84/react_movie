@@ -7,14 +7,11 @@ import { StyleHeader, StyledRMDBLogo, StyledTMDBLogo } from '../styles/StyledHea
 
 const Header = () => (
   <StyleHeader>
-    <div>
+    <div className="header-content">
       <Link to="/">
         <StyledRMDBLogo src={RMDBLogo} alt="rmdb-logo" />
-      </Link>
-      <div className="header-content">
-        
+      </Link>   
         <StyledTMDBLogo src={TMDBLogo} alt="tmdb-logo" />
-      </div> 
     </div>
   </StyleHeader>
 )
