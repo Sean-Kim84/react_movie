@@ -36,25 +36,33 @@ const Home = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
 
-  if (error) return <div>Something went wrong ...</div>;
-  if (!movies[0]) return <Spinner />;
+  
 
   const searchMovies = (search) => {
     const endpoint = search ? SEARCH_BASE_URL + search : POPULAR_BASE_URL;
 
     setSearchTerm(search);
     fetchMovies(endpoint);
-
   }
 
   const loadMoreMovies = () => {
-    const serachEndPoint = `${SEARCH_BASE_URL}${searchTerm}&page=${currentPage + 1}`;
+    const searchEndPoint = `${SEARCH_BASE_URL}${searchTerm}&page=${currentPage + 1}`;
     const popularEndPoint = `${POPULAR_BASE_URL}&page=${currentPage+1}`;
   
-    const endpoint = searchTerm ? serachEndPoint : popularEndPoint
+    const endpoint = searchTerm ? searchEndPoint : popularEndPoint
 
     fetchMovies(endpoint);
   };
+
+  if (error) return <div>Something went wrong ...</div>;
+  if (!movies[0]) {
+    return (
+      <div>
+        <SearchBar callback={searchMovies}/>
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <React.Fragment>
